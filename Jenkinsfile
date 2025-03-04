@@ -18,7 +18,7 @@ environment{
 
         stage("Sonar Code Analysis") {
             environment {
-                scannerHome = tool 'sonar7.0'
+                scannerHome = tool 'ttrend-sonar-scanner'
             }
             steps {
               withSonarQubeEnv('sonarqube-server') {
