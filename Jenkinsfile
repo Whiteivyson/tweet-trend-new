@@ -33,5 +33,15 @@ pipeline {
                 }
             }
         }
+
+        stage("Quality gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // The waitForQualityGate step waits for the Quality Gate result from SonarQube.
+                    // Setting abortPipeline: true means the pipeline will be aborted if the Quality Gate fails.
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
 }
