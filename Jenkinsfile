@@ -31,7 +31,7 @@ pipeline {
         
         stage("Sonar Code Analysis") {
             environment {
-                scannerHome = tool 'ttrend-sonar-scanner'
+                scannerHome = tool 'sonar-scanner'
             }
             steps {
                 withSonarQubeEnv('sonarqube-server') {
@@ -45,13 +45,13 @@ pipeline {
             steps {
                 script {
                         echo '<--------------- Jar Publish Started --------------->'
-                        def server = Artifactory.newServer url:registry+"/artifactory" ,  credentialsId:"jfrogtoken"
+                        def server = Artifactory.newServer url:registry+"/artifactory" ,  credentialsId:"jfrogcreds"
                         def properties = "buildid=${env.BUILD_ID},commitid=${GIT_COMMIT}";
                         def uploadSpec = """{
                             "files": [
                                 {
                                 "pattern": "jarstaging/(*)",
-                                "target": "trend-libs-release/{1}",
+                                "target": "tttrend-libs-release/",
                                 "flat": "false",
                                 "props" : "${properties}",
                                 "exclusions": [ "*.sha1", "*.md5"]
@@ -80,7 +80,7 @@ pipeline {
             steps {
                     script {
                     echo '<--------------- Docker Publish Started --------------->'  
-                        docker.withRegistry(registry, 'jfrogtoken'){
+                        docker.withRegistry(registry, 'jfrogcreds'){
                             app.push()
                         }    
                     echo '<--------------- Docker Publish Ended --------------->'  
