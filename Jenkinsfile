@@ -29,17 +29,27 @@ pipeline {
             }
         }
         
+       
         stage("Sonar Code Analysis") {
             environment {
                 scannerHome = tool 'sonar-scanner'
             }
             steps {
-                withSonarQubeEnv('sonarqube-server') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }
+              withCredentials([string(credentialsId: 'sonarcreds', variable: 'SONAR_TOKEN')]) {
+              withSonarQubeEnv('sonarserver') {
+                sh '''${scannerHome}/bin/sonar-scanner 
+                   -Dsonar.projectKey=whiteivysonkey \
+                   -Dsonar.projectName=ttrend \
+                   -Dsonar.projectVersion=1.0 \
+                   -Dsonar.sources=src/ \
+                   -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
+                   -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+              }
             }
-        }  
-
+        }
+        }
              
         stage("Jar Publish") {
             steps {
