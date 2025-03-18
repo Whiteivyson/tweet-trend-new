@@ -51,7 +51,7 @@ pipeline {
                         "files": [
                             {
                                 "pattern": "jarstaging/*",
-                                "target": "tttrend-libs-release-local/",
+                                "target": "tttrend-libs-release-local/{1}",
                                 "props" : "${properties}",
                                 "exclusions": ["*.sha1", "*.md5"]
                             }
