@@ -30,25 +30,18 @@ pipeline {
         }
         
        
-        stage("Sonar Code Analysis") {
+        stage ("Sonar Analysis") {
             environment {
-                scannerHome = tool 'sonar-scanner'
+               scannerHome = tool 'sonar-scanner'  //scanner name configured for slave 
             }
             steps {
-              withCredentials([string(credentialsId: 'sonarcreds', variable: 'SONAR_TOKEN')]) {
-              withSonarQubeEnv('sonarserver') {
-                sh '''${scannerHome}/bin/sonar-scanner 
-                   -Dsonar.projectKey=whiteivysonkey \
-                   -Dsonar.projectName=ttrend \
-                   -Dsonar.projectVersion=1.0 \
-                   -Dsonar.sources=src/ \
-                   -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
-                   -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
-              }
-            }
-        }
+                echo '<--------------- Sonar Analysis started  --------------->'
+                withSonarQubeEnv('sonarqube-server') {    
+                    //sonarqube server name in master
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }    
+                echo '<--------------- Sonar Analysis stopped  --------------->'
+            }   
         }
              
         stage("Jar Publish") {
