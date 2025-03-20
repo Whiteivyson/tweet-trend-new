@@ -7,10 +7,10 @@ pipeline {
     
     environment {
         PATH = "/opt/apache-maven-3.9.9/bin:$PATH"
+        KUBECONFIG = "$HOME/.kube/config"  // Ensure Jenkins uses the correct config
     }
-    environment {
-    KUBECONFIG = "$HOME/.kube/config"  // Ensure Jenkins uses the correct config
-    }
+    
+    
     
     stages {
         stage("Build") {
